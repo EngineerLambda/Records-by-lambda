@@ -70,15 +70,15 @@ if option == "Update DB":
 
         with st.spinner("Deleting..."):
             time.sleep(2)
-            if st.button(f"Delete last {del_lim} entry(ies)"):
-                with conn.cursor(buffered=True) as del_conn:
-                    del_conn.execute("""
-                    DELETE FROM record_table
-                    ORDER BY ID DESC
-                    LIMIT %s;
-                    """, (del_lim, ))
-                    conn.commit()
-                    st.error("Row(s) deleted")
+        if st.button(f"Delete last {del_lim} entry(ies)"):
+            with conn.cursor(buffered=True) as del_conn:
+                del_conn.execute("""
+                DELETE FROM record_table
+                ORDER BY ID DESC
+                LIMIT %s;
+                """, (del_lim, ))
+                conn.commit()
+                st.error("Row(s) deleted")
 
  
 

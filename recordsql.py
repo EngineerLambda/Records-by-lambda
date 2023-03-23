@@ -141,3 +141,5 @@ else:
         st.markdown("### Displaying only up to the last five entries of the database")
         
         st.table(df.tail())
+
+st.experimental_singleton.clear()

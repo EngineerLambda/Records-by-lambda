@@ -10,3 +10,5 @@ This app uses a remote MySql server to store finance data, and can perform opera
 3. Fetching can be done by either using "All" to fetch all entries or using a custom number input to fetch particular number of rows .
 4. User can delete "a number" of last few entries from the database, in case of wrong entries. I have this button hidden in an expander to avoid "Click mistake".
 5. Fetched data returns a dataframe from the database, and can be "downloaded" as a CSV file.
+
+[Link to web app](https://records-by-lambda.streamlit.app/)

@@ -23,7 +23,10 @@ time_ = ":".join(time_split)
 def init_connection():
     return mysql.connector.connect(**st.secrets["mysql"])
 
-conn = init_connection()
+try:
+    conn = init_connection()
+except:
+    st.error("Error connecting to DB at the moment, try again later, Thank you")
 
 
 if option == "Update DB":

@@ -68,9 +68,7 @@ if option == "Update DB":
     with st.expander("Want to delete last few entry(ies)"):
         del_lim = st.number_input("Enter number of last entry(ies) to delete", min_value=1, step=1)
 
-        with st.spinner("Deleting..."):
-            time.sleep(2)
-        if st.button(f"Delete last {del_lim} entry(ies)"):
+        def del_from_db():
             with conn.cursor(buffered=True) as del_conn:
                 del_conn.execute("""
                 DELETE FROM record_table
@@ -80,14 +78,23 @@ if option == "Update DB":
                 conn.commit()
                 st.error("Row(s) deleted")
 
- 
+
+        if st.button(f"Delete last {del_lim} entry(ies)"):
+            with st.spinner("Deleting rows..."):
+                del_rows = del_from_db()
+
+        
 
 else:
     limits = st.selectbox("Select 'All' to download all, or 'Choose' to enter a custom number", options=["All", "Choose"])
     if limits == "Choose":
         limit = st.number_input("How many rows (entries) do you want to download?", format="%i", min_value=1, step=1)
         limit_tup = (limit,)
-
+        disp_txt = f"Displaying the first {limit} entry(ies) of the database"
+        button_str = f"FETCH {limit} ROWS"
+    else:
+        disp_txt = f"Displaying all entries of the database"
+        button_str = "FETCH ALL ROWS"
 
     def fetch_from_table():
         with conn.cursor(buffered=True) as fetch_con:
@@ -100,7 +107,7 @@ else:
         return fetch_con.fetchall()
     
 
-    if st.button("FETCH"):
+    if st.button(button_str):
         with st.spinner("Fetching Data from DB"):
             time.sleep(2)
         rows = fetch_from_table()
@@ -122,9 +129,11 @@ else:
             row = list(row)
             row[2] = convert_time(row[2])
             array.append(row)
-
-            
-        df = pd.DataFrame(array, columns=header)
+    
+        if limits == "All":
+            df = pd.DataFrame(array, columns=header)
+        else:
+            df = pd.DataFrame(array, columns=header)[:limit]
 
 
         def convert_df(df_name):
@@ -132,14 +141,14 @@ else:
         
     
         download_bt = st.download_button(
-                label="Download the fetched Record(s)",
+                label="Download All records" if limits == "All" else f"Download {limit} record(s) fetched" ,
                 data=convert_df(df),
                 file_name="record.csv",
                 key="download-csv")
         
 
-        st.markdown("### Displaying only up to the last five entries of the database")
+        st.markdown(f"### {disp_txt}")
         
-        st.table(df.tail())
+        st.dataframe(df, width=1000)
 
-st.experimental_singleton.clear()
+st.runtime.legacy_caching.caching.clear_cache()

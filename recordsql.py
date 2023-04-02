@@ -5,6 +5,7 @@ from datetime import datetime
 import mysql.connector
 
 
+st.set_page_config(page_title="Records by Lambda", page_icon="✍")
 with st.sidebar:
     st.title("Records by Lambda")
     option = st.radio("Select desired action from options below",options=["Update DB", "Fetch from DB"])

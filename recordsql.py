@@ -3,6 +3,7 @@ import time
 import pandas as pd
 from datetime import datetime
 import mysql.connector
+import ydata_profiling
 from streamlit_pandas_profiling import st_profile_report
 
 
